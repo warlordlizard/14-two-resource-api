@@ -2,7 +2,7 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-const debug = require('debug')('list:list-route');
+const debug = require('debug')('game:list-route');
 const List = require('../model/list.js');
 const listRouter = module.exports = new Router();
 const createError = require('http-errors');
@@ -12,6 +12,7 @@ listRouter.get('/api/list/:listId', function(req, res, next) {
   if (!req.params.listId) return next(createError(404, 'not found'));
 
   List.findById(req.params.listId)
+    .populate('games')
     .then( list => res.json(list))
     .catch(next);
 });
@@ -40,7 +41,9 @@ listRouter.put('/api/list/:listId', jsonParser, function(req, res, next) {
   
   List.findByIdAndUpdate(req.params.listId, req.body, {new: true})
     .then(list => res.json(list))
-    .catch(next);
-  
+    .catch(err => {
+      if (err.name === 'ValidationError') return next(err);
+      next(createError(404, err.message));
+    });
 });
 

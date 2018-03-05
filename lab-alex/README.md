@@ -1,5 +1,3 @@
-![cf](https://i.imgur.com/7v5ASc8.png) Lab 09: Persistence
-======
 
 ## Directory Structure
 * **README.md**
@@ -12,12 +10,16 @@
   * a `start` script has been configured for running the server
 * **lib/** - contains helper modules
   * **error-middleware.js**
+  * **server-toggle.js**
 * **model/** - contains resource model
   * **list.js**
+  * **game.js**
 * **route/** - contains routes
   * **list-route.js**
+  * **game-route.js**
 * **__test__** - contains route tests
   * **list.test.js**
+  * **game.test.js**
 * **server.js** - runs the application
 
 ## Installation
@@ -33,7 +35,10 @@ GET: With a valid List id, user can use the following route:
 ```
 localhost:3000/api/list/:listId
 ```
-
+POST: With a valid List id, user can use the following route to add a game to a list: 
+```
+localhost:3000/api/list/:listId/game
+```
 POST: Lists can be created using the following route with name and content inputs: 
 ```
 localhost:3000/api/list
