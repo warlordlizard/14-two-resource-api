@@ -3,7 +3,9 @@
 const request = require('superagent');
 const List = require('../model/list.js');
 const PORT = process.env.PORT || 3000;
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
+const serverToggle = require('../lib/server-toggle.js');
+const server = require('../server.js');
 
 require('../server.js');
 require('jest');
@@ -14,6 +16,12 @@ const exampleList = {
 };
 
 describe('List Routes Using Mongo', function() {
+  beforeAll( done => {
+    serverToggle.serverOn(server, done);
+  });
+  afterAll( done => {
+    serverToggle.serverOff(server, done);
+  });
   describe('POST: /api/list', function() {
     describe('with a valid request body', function() {
       afterEach( done => {
@@ -24,7 +32,7 @@ describe('List Routes Using Mongo', function() {
           return;
         }
       });
-      it('shoult return a list', done => {
+      it('should return a list', done => {
         request.post(`${url}/api/list`)
           .send(exampleList)
           .end((err, res) => {
@@ -46,7 +54,7 @@ describe('List Routes Using Mongo', function() {
       });
     });
   });
-  describe('GET: api/list/:listId', function () {
+  describe('GET: /api/list/:listId', function () {
     describe('with a valid id', function() {
       beforeEach( done => {
         exampleList.timestamp = new Date();
@@ -90,7 +98,7 @@ describe('List Routes Using Mongo', function() {
     });
 
   });
-  describe('PUT: api/list/:listId', function () {
+  describe('PUT: /api/list/:listId', function () {
     describe('with a valid id', function () {
       beforeEach(done => {
         exampleList.timestamp = new Date();
@@ -135,7 +143,7 @@ describe('List Routes Using Mongo', function() {
           .send(updatedList)
           .end((err, res) => {
             expect(err).toBeTruthy();
-            // expect(res.status).toEqual(404);
+            expect(res.status).toEqual(404);
             done();
           });
       });
